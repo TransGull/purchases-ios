@@ -468,8 +468,11 @@ fileprivate extension PaywallsV2View {
         let defaultLocale = Locale(identifier: defaultLocale)
 
         // STEP 2: choose best locale based on device's list of preferred locales.
-        let chosenLocale = Self.preferredLocale(from: paywallLocales, preferredLocales: preferredLocales)
+        var chosenLocale = Self.preferredLocale(from: paywallLocales, preferredLocales: preferredLocales)
         ?? defaultLocale
+        if let identifier = UserDefaults.standard.string(forKey: "AppLanguage") {
+            chosenLocale = Locale(identifier: identifier)
+        }
 
         // STEP 3: Get localization for one of preferred locales in order
         if let localizedStrings = componentsLocalizations.findLocale(chosenLocale) {
