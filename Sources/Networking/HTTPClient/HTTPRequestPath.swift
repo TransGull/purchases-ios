@@ -149,7 +149,6 @@ extension HTTPRequest.Path: HTTPRequestPath {
     var shouldSendEtag: Bool {
         switch self {
         case .getCustomerInfo,
-                .getOfferings,
                 .getIntroEligibility,
                 .logIn,
                 .postAttributionData,
@@ -162,7 +161,8 @@ extension HTTPRequest.Path: HTTPRequestPath {
                 .getCustomerCenterConfig,
                 .appHealthReport:
             return true
-        case .health:
+        case .getOfferings,
+                .health:
             return false
         }
     }
