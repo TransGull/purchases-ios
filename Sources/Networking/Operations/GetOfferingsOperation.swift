@@ -64,8 +64,8 @@ private extension GetOfferingsOperation {
             return
         }
 
-        let request = HTTPRequest(method: .get, path: .getOfferings(appUserID: appUserID))
-
+        var request = HTTPRequest(method: .get, path: .getOfferings(appUserID: appUserID))
+        request.preferredLocales = "ja,zh_Hans,zh_Hant,en"
         httpClient.perform(request) { (response: VerifiedHTTPResponse<OfferingsResponse>.Result) in
             defer {
                 completion()
