@@ -266,6 +266,9 @@ internal extension HTTPClient {
                 verificationMode: verificationMode,
                 internalSettings: internalSettings
             )
+            if let preferredLocales = httpRequest.preferredLocales {
+                self.headers["X-Preferred-Locales"] = preferredLocales
+            }
             self.verificationMode = verificationMode
 
             if let completionHandler = completionHandler {
