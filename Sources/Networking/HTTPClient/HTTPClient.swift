@@ -114,7 +114,7 @@ class HTTPClient {
 
     // Visible for tests
     var defaultHeaders: RequestHeaders {
-        let preferredLanguages = Bundle.main.localizations.map {
+        let preferredLanguages = self.systemInfo.preferredLanguages.prefix(3).map {
             $0.replacingOccurrences(of: "-", with: "_")
         }.joined(separator: ",")
         var headers: RequestHeaders = [
@@ -266,6 +266,9 @@ internal extension HTTPClient {
                 verificationMode: verificationMode,
                 internalSettings: internalSettings
             )
+            if let preferredLocales = httpRequest.preferredLocales {
+                self.headers["X-Preferred-Locales"] = preferredLocales
+            }
             self.verificationMode = verificationMode
 
             if let completionHandler = completionHandler {

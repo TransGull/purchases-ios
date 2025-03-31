@@ -68,7 +68,17 @@ private extension GetCustomerCenterConfigOperation {
             return
         }
 
-        let request = HTTPRequest(method: .get, path: .getCustomerCenterConfig(appUserID: appUserID))
+        var request = HTTPRequest(method: .get, path: .getCustomerCenterConfig(appUserID: appUserID))
+
+        let mapping = [
+            "zh-Hans": "zh",
+            "zh-Hant": "zh",
+            "ja-JP": "ja",
+            "en-US": "en",
+        ]
+        if let locale = UserDefaults.standard.string(forKey: "AppLanguage"), let replacement = mapping[locale] {
+            request.preferredLocales = replacement
+        }
 
         httpClient.perform(request) { (response: VerifiedHTTPResponse<CustomerCenterConfigResponse>.Result) in
             defer {
