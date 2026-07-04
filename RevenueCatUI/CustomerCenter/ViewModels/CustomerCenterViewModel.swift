@@ -94,10 +94,7 @@ import Foundation
     }
 
     var shouldShowList: Bool {
-        let virtualCurrenciesCount = virtualCurrencies.map { $0.all.count } ?? 0
-        let nonVirtualCurrencyCount = subscriptionsSection.count + nonSubscriptionsSection.count
-
-        return nonVirtualCurrencyCount + virtualCurrenciesCount > 1
+        false
     }
 
     var originalAppUserId: String {

@@ -1241,7 +1241,7 @@ final class CustomerCenterViewModelTests: TestCase {
             configuration: CustomerCenterConfigData.default
         )
 
-        expect(viewModel.shouldShowList).to(beTrue())
+        expect(viewModel.shouldShowList).to(beFalse())
 
         // one active subscription and one purchase
         viewModel = CustomerCenterViewModel(
@@ -1254,7 +1254,7 @@ final class CustomerCenterViewModelTests: TestCase {
             configuration: CustomerCenterConfigData.default
         )
 
-        expect(viewModel.shouldShowList).to(beTrue())
+        expect(viewModel.shouldShowList).to(beFalse())
 
         // one expired subscription
         viewModel = CustomerCenterViewModel(
@@ -1271,7 +1271,7 @@ final class CustomerCenterViewModelTests: TestCase {
             activeNonSubscriptionPurchases: [.consumable],
             configuration: CustomerCenterConfigData.default
         )
-        expect(viewModel.shouldShowList).to(beTrue())
+        expect(viewModel.shouldShowList).to(beFalse())
     }
 
     func testShouldShowListWithVirtualCurrencies() async throws {
@@ -1290,7 +1290,7 @@ final class CustomerCenterViewModelTests: TestCase {
         await viewModel.loadScreen()
         expect(viewModel.shouldShowList).to(beFalse())
 
-        // Test with multiple virtual currencies -> should be true
+        // Test with multiple virtual currencies -> should be false in this fork
         mockPurchases = MockCustomerCenterPurchases(
             customerInfo: CustomerCenterViewModelTests.customerInfoWithExpiredSubscriptions,
             customerCenterConfigData: CustomerCenterConfigData.mock(displayVirtualCurrencies: true)
@@ -1303,9 +1303,9 @@ final class CustomerCenterViewModelTests: TestCase {
         )
 
         await viewModel.loadScreen()
-        expect(viewModel.shouldShowList).to(beTrue())
+        expect(viewModel.shouldShowList).to(beFalse())
 
-        // Test with 1 subscription + virtual currencies -> should be true
+        // Test with 1 subscription + virtual currencies -> should be false in this fork
         mockPurchases = MockCustomerCenterPurchases(
             customerInfo: CustomerCenterViewModelTests.customerInfoWithAppleSubscriptions,
             customerCenterConfigData: CustomerCenterConfigData.mock(displayVirtualCurrencies: true)
@@ -1318,7 +1318,7 @@ final class CustomerCenterViewModelTests: TestCase {
         )
 
         await viewModel.loadScreen()
-        expect(viewModel.shouldShowList).to(beTrue())
+        expect(viewModel.shouldShowList).to(beFalse())
     }
 
     private func formatted(price: Decimal, currencyCode: String = "USD") -> String {
