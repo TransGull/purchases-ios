@@ -147,6 +147,11 @@ public typealias StartPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
         set { SystemInfo.proxyURL = newValue }
     }
 
+    @objc public static var fallbackURL: URL? {
+        get { SystemInfo.fallbackURL }
+        set { SystemInfo.fallbackURL = newValue }
+    }
+
     /**
      * Set this property to true *only* if you're transitioning an existing Mac app from the Legacy
      * Mac App Store into the Universal Store, and you've configured your RevenueCat app accordingly.

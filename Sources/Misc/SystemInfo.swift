@@ -80,6 +80,7 @@ class SystemInfo {
 
     private static let _forceUniversalAppStore: Atomic<Bool> = false
     private static let _proxyURL: Atomic<URL?> = nil
+    private static let _fallbackURL: Atomic<URL?> = nil
 
     // swiftlint:disable:next force_unwrapping
     static let defaultApiBaseURL = URL(string: "https://api.revenuecat.com")!
@@ -187,6 +188,11 @@ class SystemInfo {
                 Logger.info(Strings.configure.configuring_purchases_proxy_url_set(url: privateProxyURLString))
             }
         }
+    }
+
+    static var fallbackURL: URL? {
+        get { return self._fallbackURL.value }
+        set { self._fallbackURL.value = newValue }
     }
 
     /*

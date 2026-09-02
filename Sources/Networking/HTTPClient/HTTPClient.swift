@@ -322,7 +322,7 @@ internal extension HTTPClient {
         }
 
         func requestWithNextFallbackHost(proxyURL: URL?) -> Self? {
-            guard proxyURL == nil else {
+            guard proxyURL == nil || self.httpRequest.path.customFallbackURL != nil else {
                 // Don't fallback to next host if proxyURL is set
                 return nil
             }

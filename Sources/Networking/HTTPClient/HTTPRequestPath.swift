@@ -83,6 +83,14 @@ struct DefaultResponseSignatureContextProvider: ResponseSignatureContextProvider
 
 extension HTTPRequestPath {
 
+    var customFallbackURL: URL? {
+        guard self.relativePath == "/v1/receipts" || self.relativePath.hasPrefix("/v1/subscribers/") else {
+            return nil
+        }
+
+        return SystemInfo.fallbackURL
+    }
+
     var fallbackUrls: [URL] {
         return []
     }
@@ -107,16 +115,13 @@ extension HTTPRequestPath {
 
     func url(proxyURL: URL? = nil, fallbackUrlIndex: Int? = nil) -> URL? {
         let baseURL: URL
-        if let proxyURL {
-            // When a Proxy URL is set, we don't support fallback URLs
-            guard fallbackUrlIndex == nil else {
-                // This is to safe guard against a potential infinite loop if the caller mistakenly
-                // passes both a proxyURL and a fallbackUrlIndex.
+        if let fallbackUrlIndex {
+            guard proxyURL == nil || self.customFallbackURL != nil else {
                 return nil
             }
-            baseURL = proxyURL
-        } else if let fallbackUrlIndex {
             return self.fallbackUrls[safe: fallbackUrlIndex]
+        } else if let proxyURL {
+            baseURL = proxyURL
         } else {
             baseURL = Self.serverHostURL
         }
@@ -193,6 +198,10 @@ extension HTTPRequest.Path: HTTPRequestPath {
     ]
 
     var fallbackRelativePath: String? {
+        if self.customFallbackURL != nil {
+            return self.relativePath
+        }
+
         switch self {
         case .getOfferings:
             return "/v1/offerings"
@@ -214,11 +223,18 @@ extension HTTPRequest.Path: HTTPRequestPath {
     }
 
     var fallbackUrls: [URL] {
+        let fallbackServerHostURLs: [URL?]
+        if let customFallbackURL = self.customFallbackURL {
+            fallbackServerHostURLs = [customFallbackURL]
+        } else {
+            fallbackServerHostURLs = Self.fallbackServerHostURLs
+        }
+
         guard let fallbackRelativePath = self.fallbackRelativePath else {
             return []
         }
 
-        return Self.fallbackServerHostURLs.compactMap { baseURL in
+        return fallbackServerHostURLs.compactMap { baseURL in
             guard let baseURL = baseURL,
                   let fallbackUrl = URL(string: fallbackRelativePath, relativeTo: baseURL) else {
                 let errorMessage = "Invalid fallback URL configuration for path: \(self.name)"
